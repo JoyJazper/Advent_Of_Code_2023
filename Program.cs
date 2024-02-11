@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 class Program
@@ -58,22 +62,118 @@ class Program
 
     static int GetValueFromString(string inputString)
     {
-        Console.WriteLine(inputString);
-        int firstint = -1;
-        int secondint = 0;
-        char[] chars = inputString.ToCharArray();
-        foreach(char c in chars)
-        {
-            //Console.WriteLine(c + " and toint : " + (int)c);
-            if ((int)c <= (int)'9' && (int)c >= (int)'0') {
-                if(firstint == -1) 
-                    firstint = (int)c - (int)'0';
-                secondint = (int)c - (int)'0';
-            }
-            
-        }
-        if(firstint == -1) firstint = 0;
-        Console.WriteLine("ERNOS: number : " + ((firstint * 10) + secondint));
-        return (firstint * 10) + secondint;
+        Console.WriteLine("ERNOS : Incoming : " + inputString);
+        int newint = 0;
+        StringChecker checker = new StringChecker();
+        newint += checker.GetCode(inputString.ToCharArray());
+        return newint;
     }
+}
+
+public class StringChecker
+{
+    public int GetCode(char[] chars)
+    {
+        string debug = new string(chars);
+        Console.WriteLine(debug);
+        int firstInt = -1;
+        int lastInt = -1;
+        // traverse all the char 
+        for (int i = 0; i < chars.Length; i++)
+        {
+            if (firstInt != -1)
+                break;
+
+            foreach (string check in stringNumbers.Keys)
+            {
+                if (i + check.Length - 1 < chars.Length)
+                {
+                    char[] newArray = new char[check.Length];
+                    Array.Copy(chars, i, newArray, 0, check.Length);
+                    bool isMatch = IsMatch(newArray, check.ToCharArray());
+
+                    if (isMatch)
+                    {
+                        firstInt = stringNumbers[check];
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < chars.Length; i++)
+        {
+            if (lastInt != -1)
+                break;
+
+             foreach (string check in stringNumbers.Keys)
+             {
+
+                 int j = chars.Length - i - 1;
+                 if ((j + 1) - check.Length >= 0)
+                 {
+                     char[] newArray = new char[check.Length];
+                     Array.Copy(chars, (j + 1) - check.Length, newArray, 0, check.Length);
+                     bool isMatch = IsMatch(newArray, check.ToCharArray());
+                     if (isMatch)
+                     {
+                         lastInt = stringNumbers[check];
+                         break;
+                     }
+                 }
+             }
+        }
+        if(firstInt != -1 &&  lastInt != -1)
+        //if(firstInt != -1)
+        {
+            return ((firstInt*10) + lastInt);
+            // return ((firstInt*10));
+        }
+
+        return 0;
+    }
+
+
+
+    // check if a match
+    private bool IsMatch(char[] a, char[] b)
+    {
+        if(a.Length == b.Length)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                if(a[i] != b[i])
+                {
+                    return false;
+                } 
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    private static Dictionary<string, int> stringNumbers = new Dictionary<string, int>
+    {
+        {"zero", 0},
+        {"one", 1},
+        {"two", 2},
+        {"three", 3},
+        {"four", 4},
+        {"five", 5},
+        {"six", 6},
+        {"seven", 7},
+        {"eight", 8},
+        {"nine", 9},
+        {"0", 0},
+        {"1", 1},
+        {"2", 2},
+        {"3", 3},
+        {"4", 4},
+        {"5", 5},
+        {"6", 6},
+        {"7", 7},
+        {"8", 8},
+        {"9", 9}
+    };
 }
