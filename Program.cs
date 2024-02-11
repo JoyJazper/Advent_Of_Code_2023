@@ -49,31 +49,8 @@ class Program
         GetData(url, sessionID).Wait();
         Console.WriteLine("ERNOS: size :" + input.Length);
         int sum = 0;
-        foreach (string input in input)
-        {
-            sum += GetValueFromString(input);             
-        }
         Console.WriteLine("Sum : " +  sum);
     }
 
-    static int GetValueFromString(string inputString)
-    {
-        Console.WriteLine(inputString);
-        int firstint = -1;
-        int secondint = 0;
-        char[] chars = inputString.ToCharArray();
-        foreach(char c in chars)
-        {
-            //Console.WriteLine(c + " and toint : " + (int)c);
-            if ((int)c <= (int)'9' && (int)c >= (int)'0') {
-                if(firstint == -1) 
-                    firstint = (int)c - (int)'0';
-                secondint = (int)c - (int)'0';
-            }
-            
-        }
-        if(firstint == -1) firstint = 0;
-        Console.WriteLine("ERNOS: number : " + ((firstint * 10) + secondint));
-        return (firstint * 10) + secondint;
-    }
+
 }
