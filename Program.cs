@@ -45,12 +45,71 @@ class Program
     {
         Console.Clear();
         String sessionID = "session=53616c7465645f5f344a5449077ad5e964028f53e8d6a4d3547c6e5feec6c2c39e2c2b02a2910e99f08e9cdefa219d42570dc4b592c7aa921f6e4528afea2a0e";
-        String url = "https://adventofcode.com/2023/day/1/input";
+        String url = "https://adventofcode.com/2023/day/3/input";
         GetData(url, sessionID).Wait();
         Console.WriteLine("ERNOS: size :" + input.Length);
         int sum = 0;
         Console.WriteLine("Sum : " +  sum);
+        char[,] inputMatrix;
+        // create matrix
+        inputMatrix = CreateMatrix(input);
+        // upload data in matrix
+        for(int i = 0; i < inputMatrix.GetLength(0); i++)
+        {
+            int number = -1;
+            string numC = "0";
+            bool wasDigit = false;
+            
+        // get number as biscuit[]
+            for(int j = 0; j < inputMatrix.GetLength(1); j++)
+            {
+                if (char.IsDigit(inputMatrix[i, j]))
+                {
+                    numC += inputMatrix[i, j];
+                    wasDigit = true;
+                }
+                else
+                {
+                    if (wasDigit)
+                    {
+                        number = int.Parse(numC);
+                        
+                    }
+                    wasDigit = false;
+                }
+            }
+
+        }
+        // check number validity
+        // get int from array
+        // add to sum.
+
+    }
+
+    static char[,] CreateMatrix(string[] inputMatrix)
+    {
+        int rows = inputMatrix.Length;
+        int cols = inputMatrix[0].Length;
+        char[,] matrix = new char[rows, cols];
+
+        for (int i = 0; i < rows; i++)
+        {
+            string temp = input[i];
+            for (int j = 0; j < cols; j++)
+            {
+                matrix[i, j] = temp[j];
+            }
+        }
+
+        return matrix;
     }
 
 
+}
+
+public struct Biscuit
+{
+    int row = -1;
+    int col = -1;
+    int number = -1;
 }
