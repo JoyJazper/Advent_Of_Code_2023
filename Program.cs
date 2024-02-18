@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetEnv;
 
 class Program
 {
@@ -61,32 +60,50 @@ class Program
         totalMax = 39;
 
         GetData(url, cookieString).Wait();
-        Console.WriteLine("ERNOS: size :" + input.Length);
+        //Console.WriteLine("ERNOS: size :" + input.Length);
         int sum = 0;
 
         foreach(string line in input)
         {
-            Console.WriteLine(line);
+            //Console.WriteLine(line);
             string[] games = GetGames(line);
             if(games.Length > 0)
             {
                 int GameID = GetGameID(games[0]);
                 bool isValid = true;
+
+                RGB minCubes = new RGB();
                 foreach (string game in games)
                 {
-                    Console.WriteLine(game);
-                    int x = GetValue(game, "red");
-                    int y = GetValue(game, "green");
-                    int z = GetValue(game, "blue");
-                    if(!IsValid(x, y, z))
+                    //Console.WriteLine(game);
+                    int r = GetValue(game, "red");
+                    if(r > minCubes.R)
+                    {
+                        minCubes.R = r;
+                    }
+                    int g = GetValue(game, "green");
+                    if (g > minCubes.G)
+                    {
+                        minCubes.G = g;
+                    }
+                    int b = GetValue(game, "blue");
+                    if (b > minCubes.B)
+                    {
+                        minCubes.B = b;
+                    }
+                    if (!IsValid(r, g, b))
                         isValid = false;
                 }
 
+                Console.WriteLine("Current RGB = " + minCubes.R + ", " + minCubes.G + ", " + minCubes.B);
+                int num = minCubes.R*minCubes.G*minCubes.B;
+                Console.WriteLine("Sum after ID : " + GameID + " is " + num);
+                sum += num;
                 if (isValid)
                 {
-                    Console.WriteLine("Sum after ID : " + GameID + " is " + sum);
-                    sum += GameID;
+                    //sum += GameID;
                 }
+
             }
         }
         Console.WriteLine("Sum : " +  sum);
@@ -95,7 +112,7 @@ class Program
 
     static int GetValueFromString(string inputString)
     {
-        Console.WriteLine(inputString);
+        //Console.WriteLine(inputString);
         int firstint = -1;
         int secondint = 0;
         char[] chars = inputString.ToCharArray();
@@ -110,7 +127,7 @@ class Program
             
         }
         if(firstint == -1) firstint = 0;
-        Console.WriteLine("ERNOS: number : " + ((firstint * 10) + secondint));
+        //Console.WriteLine("ERNOS: number : " + ((firstint * 10) + secondint));
         return (firstint * 10) + secondint;
     }
 
@@ -144,7 +161,7 @@ class Program
             }
             multiplier++;
         }
-        Console.WriteLine("GameID : " +  result);
+        //Console.WriteLine("GameID : " +  result);
         return result;
     }
 
@@ -194,4 +211,11 @@ class Program
         }
         return true;
     }
+}
+
+public struct RGB()
+{
+    public int R = -1;
+    public int G = -1;
+    public int B = -1;
 }
